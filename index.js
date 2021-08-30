@@ -53,13 +53,13 @@ class FBDL {
             const document = new JSDOM(html).window.document;
             const rawdata = document.querySelector('script[type="application/ld+json"]').innerHTML;
             const json = JSON.parse(rawdata);
-
-            const reactions = html.split('top_reactions:{edges:')[1].split('},associated_video')[0];
+            console.log(json);
+            const reactions = html?.split('top_reactions:{edges:')[1]?.split('},associated_video')[0];
             const reactionData = safeEval(reactions);
 
             const obj = {
                 name: json.name,
-                title: document.querySelector('meta[property="og:title"]').attributes.item(1).value,
+                title: document.querySelector('meta[property="og:title"]')?.attributes?.item(1)?.value ?? "",
                 description: json.description,
                 rawVideo: json.contentUrl,
                 thumbnail: json.thumbnailUrl,
@@ -77,36 +77,37 @@ class FBDL {
                 size: json.contentSize,
                 quality: json.videoQuality,
                 author: {
-                    type: json.author["@type"],
-                    name: json.author.name,
-                    url: json.author.url
+                    type: json?.author?.["@type"],
+                    name: json?.author?.name,
+                    url: json?.author?.url
                 },
                 publisher: {
-                    type: json.publisher["@type"],
-                    name: json.publisher.name,
-                    url: json.publisher.url,
-                    avatar: json.publisher.logo.url,
-                    name: json.publisher.name,
-                    url: json.publisher.url
+                    type: json.publisher?.["@type"],
+                    name: json.publisher?.name,
+                    url: json.publisher?.url,
+                    avatar: json.publisher?.logo?.url,
+                    name: json.publisher?.name,
+                    url: json.publisher?.url
                 },
-                url: html.split('",page_uri:"')[1].split('",')[0],
+                url: html?.split('",page_uri:"')[1]?.split('",')[0] ?? json.video?.contentUrl ?? json.contentUrl ?? json.image[0].contentUrl,
                 reactions: {
-                    total: parseInt(html.split(',reaction_count:')[1].split('},')[0].split(':')[1]) || 0,
-                    like: reactionData.find(x => x.node.reaction_type === "LIKE").reaction_count || 0,
-                    love: reactionData.find(x => x.node.reaction_type === "LOVE").reaction_count || 0,
-                    care: reactionData.find(x => x.node.reaction_type === "SUPPORT").reaction_count || 0,
-                    wow: reactionData.find(x => x.node.reaction_type === "WOW").reaction_count || 0,
-                    haha: reactionData.find(x => x.node.reaction_type === "HAHA").reaction_count || 0,
-                    sad: reactionData.find(x => x.node.reaction_type === "SORRY").reaction_count || 0,
-                    angry: reactionData.find(x => x.node.reaction_type === "ANGER").reaction_count || 0
+                    total: parseInt(html?.split(',reaction_count:')[1]?.split('},')[0]?.split(':')[1]) || 0,
+                    like: reactionData?.find(x => x.node.reaction_type === "LIKE").reaction_count || 0,
+                    love: reactionData?.find(x => x.node.reaction_type === "LOVE").reaction_count || 0,
+                    care: reactionData?.find(x => x.node.reaction_type === "SUPPORT").reaction_count || 0,
+                    wow: reactionData?.find(x => x.node.reaction_type === "WOW").reaction_count || 0,
+                    haha: reactionData?.find(x => x.node.reaction_type === "HAHA").reaction_count || 0,
+                    sad: reactionData?.find(x => x.node.reaction_type === "SORRY").reaction_count || 0,
+                    angry: reactionData?.find(x => x.node.reaction_type === "ANGER").reaction_count || 0
 
                 },
-                shares: html.split(',share_count:{')[1].split('},')[0].split(':')[1],
-                views: html.split(',video_view_count:')[1].split(',')[0]
+                shares: html?.split(',share_count:{')[1]?.split('},')[0]?.split(':')[1] || 0,
+                views: html?.split(',video_view_count:')[1]?.split(',')[0] || 0
             };
 
             return obj;
-        } catch(e) {
+        } catch (e) {
+            console.log(e);
             return null;
         }
     }
