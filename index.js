@@ -16,7 +16,7 @@ class FBDL {
      * @param {string} url URL to validate
      */
     static validateURL(url) {
-        const REGEX = /(https?:\/\/)(www\.|m\.)?(facebook|fb).com\/.*\/videos\/.*/;
+        const REGEX = /(https?:\/\/)(www\.|m\.)?(facebook|fb).com\/.*/;
         if (!url || typeof url !== "string") return false;
         return REGEX.test(url);
     }
