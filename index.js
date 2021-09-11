@@ -50,8 +50,9 @@ class FBDL {
         if (!FBDL.validateURL(url)) throw new Error("Invalid url.");
         try {
             const html = await FBDL._parseHTML(url);
+            console.log(html);
             const document = new JSDOM(html).window.document;
-            const rawdata = document.querySelector('script[type="application/ld+json"]')?.innerHTML;
+            const rawdata = document.querySelector('script[type="application/ld+json"]')?.innerHTML || "{}";
             const json = JSON.parse(rawdata);
             //console.log(json);
             const reactions = html?.split('top_reactions:{edges:')[1]?.split('},associated_video')[0];
