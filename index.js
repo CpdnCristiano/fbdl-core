@@ -89,21 +89,22 @@ class FBDL {
                     name: json.publisher?.name,
                     url: json.publisher?.url
                 },
-                url: html?.split('",page_uri:"')[1]?.split('",')[0] ?? json.video?.contentUrl ?? json.contentUrl ?? json.image[0].contentUrl,
+                url: json.video?.contentUrl || json.contentUrl || json.image[0].contentUrl || json.image[0]?.url,
                 reactions: {
                     total: parseInt(html?.split(',reaction_count:')[1]?.split('},')[0]?.split(':')[1]) || 0,
-                    like: reactionData?.find(x => x.node.reaction_type === "LIKE").reaction_count || 0,
-                    love: reactionData?.find(x => x.node.reaction_type === "LOVE").reaction_count || 0,
-                    care: reactionData?.find(x => x.node.reaction_type === "SUPPORT").reaction_count || 0,
-                    wow: reactionData?.find(x => x.node.reaction_type === "WOW").reaction_count || 0,
-                    haha: reactionData?.find(x => x.node.reaction_type === "HAHA").reaction_count || 0,
-                    sad: reactionData?.find(x => x.node.reaction_type === "SORRY").reaction_count || 0,
-                    angry: reactionData?.find(x => x.node.reaction_type === "ANGER").reaction_count || 0
+                    like: reactionData?.find(x => x.node.reaction_type === "LIKE")?.reaction_count || 0,
+                    love: reactionData?.find(x => x.node.reaction_type === "LOVE")?.reaction_count || 0,
+                    care: reactionData?.find(x => x.node.reaction_type === "SUPPORT")?.reaction_count || 0,
+                    wow: reactionData?.find(x => x.node.reaction_type === "WOW")?.reaction_count || 0,
+                    haha: reactionData?.find(x => x.node.reaction_type === "HAHA")?.reaction_count || 0,
+                    sad: reactionData?.find(x => x.node.reaction_type === "SORRY")?.reaction_count || 0,
+                    angry: reactionData?.find(x => x.node.reaction_type === "ANGER")?.reaction_count || 0
 
                 },
                 shares: html?.split(',share_count:{')[1]?.split('},')[0]?.split(':')[1] || 0,
                 views: html?.split(',video_view_count:')[1]?.split(',')[0] || 0
             };
+
 
             return obj;
         } catch (e) {
